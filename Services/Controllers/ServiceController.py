@@ -100,10 +100,13 @@ class ServiceController:
         service = Service.objects.get(id=service_id)
         service.views += 1
         service.save()
-        requesting_user = CustomUser.objects.get(api_key=request.POST.get('api', ''))
+        try :
+            requesting_user = CustomUser.objects.get(api_key=request.POST.get('api', ''))
 
-        if service.author == requesting_user or requesting_user.is_admin():
-            return service.serialize_admin()
+            if service.author == requesting_user or requesting_user.is_admin():
+                return service.serialize_admin()
+        except:
+            return service.serialize_user()
 
         return service.serialize_user()
 
