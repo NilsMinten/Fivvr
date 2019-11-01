@@ -8,23 +8,18 @@ class UserController:
 
         return True
 
-    def __valididate_user(self, user):
-        if user.api_key == '' or user.api_key is None:
-            user.set_api_key()
-
     def login_user(self, request):
-        if request.POST.get('email', '') != '' and request.POST.get('password', '') != '':
+        if request.POST.get('username', '') != '' and request.POST.get('password', '') != '':
             try:
-                user = CustomUser.objects.get(email=request.POST.get('email'))
+                user = CustomUser.objects.get(username=request.POST.get('username'))
             except:
                 return {
                     'status': 'failed',
-                    'reason': 'couldn\'t find a user with this email'
+                    'reason': 'couldn\'t find a user with this username'
                 }
 
             if user.check_password(request.POST.get('password')):
                 if self.__check_user_karma(user):
-                    self.__valididate_user(user)
                     return user.serialize()
                 else:
                     return {
@@ -41,13 +36,12 @@ class UserController:
     def create_user(self, request):
         if request.method == 'POST':
             try:
-                user = CustomUser()
                 uname = request.POST.get('username', '')
                 pword = request.POST.get('password', '')
                 mail = request.POST.get('email', '')
                 if uname != '' and pword != '' and mail != '':
-                    user = user.create(username=uname, password=pword, email=mail)
-                    self.__valididate_user(user)
+                    user = CustomUser()
+                    user.create(uname, pword, mail)
 
                     status = {
                         'status': 'success'
@@ -57,10 +51,10 @@ class UserController:
                         'status': 'failed',
                         'reason': 'need username password and email'
                     }
-            except:
+            except Exception as e:
                 status = {
                     'status': 'failed',
-                    'reason': 'user couldn\'t be created'
+                    'reason': 'user couldn\'t be created: ' + str(e)
                 }
         else:
             status = {

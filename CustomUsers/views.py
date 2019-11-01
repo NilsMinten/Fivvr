@@ -23,7 +23,7 @@ def object_karma(request, user_id):
 
 def admin_view_karma_objections(request, user_id):
     status = karma_objections_controller.view_karma_objections(user_id, request)
-    return JsonResponse(status)
+    return JsonResponse(status, safe=False)
 
 
 def admin_approve_karma_objection(request, objection_id):

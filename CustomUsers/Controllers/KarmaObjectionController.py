@@ -9,11 +9,14 @@ class KarmaObjectionController:
                 'reason': 'user is not admin'
             }
 
-        objections = KarmaObjection.objects.get(user=CustomUser.objects.get(id=user_id))
+        objections = KarmaObjection.objects.filter(user=CustomUser.objects.get(id=user_id))
 
         serialized_objections = []
-        for objection in objections:
-            serialized_objections.append(objection.serialize())
+        try:
+            for objection in objections:
+                serialized_objections.append(objection.serialize())
+        except:
+            serialized_objections = []
 
         return serialized_objections
 

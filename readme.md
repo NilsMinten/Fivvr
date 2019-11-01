@@ -52,6 +52,7 @@ key: string
 
 ``` http://localhost:8000/service/cancel/<int:service_id> ``` - TODO: implement function
 
+
 ## ADMIN
 ### Karma management
 ``` http://localhost:8000/administrator/karma/<int:user_id> ``` - Load a users karma objections

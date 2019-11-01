@@ -5,8 +5,8 @@ import random
 
 
 class CustomUser(AbstractUser):
-    karma = models.IntegerField()
-    api_key = models.TextField()
+    karma = models.IntegerField(null=True)
+    api_key = models.TextField(null=True)
     pass
 
     def __str__(self):
@@ -27,16 +27,13 @@ class CustomUser(AbstractUser):
         self.karma = 0
         self.save()
         self.groups.set([2])
+        self.save()
 
     def serialize(self):
         if self.is_admin():
             group = 'admin'
         else:
             group = 'member'
-
-        if self.api_key == '':
-            self.set_api_key()
-            self.save()
 
         return {
             'username': self.username,
@@ -73,6 +70,7 @@ class KarmaObjection(models.Model):
 
     def serialize(self):
         return {
+            'objection_id': self.id,
             'user_id': self.user.id,
             'reason': self.reason,
             'accepted': self.accepted

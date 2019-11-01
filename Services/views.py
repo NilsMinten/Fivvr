@@ -32,13 +32,3 @@ def load_service(request, service_id):
 def upvote_service(request, service_id):
     status = service_controller.like_service(service_id)
     return JsonResponse(status)
-
-
-def buy_service(request, service_id):
-    status = service_controller.buy_service(request, service_id)
-    return JsonResponse(status)
-
-
-def cancel_service(request, service_id):
-    status = service_controller.cancel_service(request, service_id)
-    return JsonResponse(status)

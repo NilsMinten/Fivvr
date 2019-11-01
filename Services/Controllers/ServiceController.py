@@ -1,5 +1,6 @@
 from ..models import Service
 from CustomUsers.models import CustomUser
+from Payments.Controllers.PaymentController import PaymentController
 
 
 class ServiceController:
@@ -25,8 +26,9 @@ class ServiceController:
         services_serialized = []
         try:
             if CustomUser.objects.get(api_key=request.POST.get('api', '')).is_admin():
+                paymentController = PaymentController()
                 for service in services:
-                    services_serialized.append(service.serialize_admin())
+                    services_serialized.append(service.serialize_admin(paymentController.get_payments_for_service(service.id)))
             else:
                 for service in services:
                     services_serialized.append(service.serialize_user())
@@ -100,11 +102,12 @@ class ServiceController:
         service = Service.objects.get(id=service_id)
         service.views += 1
         service.save()
-        try :
+        try:
             requesting_user = CustomUser.objects.get(api_key=request.POST.get('api', ''))
+            paymentController = PaymentController()
 
             if service.author == requesting_user or requesting_user.is_admin():
-                return service.serialize_admin()
+                return service.serialize_admin(paymentController.get_payments_for_service(service.id), requesting_user)
         except:
             return service.serialize_user()
 

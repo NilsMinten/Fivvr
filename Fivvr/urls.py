@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from Services import views as serviceviews
 from CustomUsers import views as userviews
+from Payments import views as paymentviews
 
 urlpatterns = [
     # --- Admin panel url ---#
@@ -34,8 +35,9 @@ urlpatterns = [
     path('service/delete/<int:service_id>', serviceviews.delete_service, name='delete_services'),
     path('service/edit/<int:service_id>', serviceviews.edit_service, name='edit_services'),
     path('service/upvote/<int:service_id>', serviceviews.upvote_service, name='upvote_service'),
-    path('service/buy/<int:service_id>', serviceviews.buy_service, name='buy_service'),
-    path('service/cancel/<int:service_id>', serviceviews.cancel_service, name='cancel_service'),
+    # payment urls
+    path('service/buy/<int:service_id>', paymentviews.create_payment_for_service, name='buy_service'),
+    path('service/cancel/<int:payment_id>', paymentviews.service_cancel, name='cancel_service'),
 
     # --- Admin urls  --- #
     # Karma management
